@@ -39,10 +39,10 @@ const Dashboard = () => {
       </Stack>
 
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={4}>
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" onClick={() => navigate('/apply')}>
           Apply for Internship
         </Button>
-        <Button variant="outlined" color="primary">
+        <Button variant="outlined" color="primary" onClick={() => navigate('/edit-profile')}>
           Edit Profile
         </Button>
         <Button
