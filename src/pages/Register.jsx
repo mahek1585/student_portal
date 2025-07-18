@@ -1,56 +1,50 @@
 import React from 'react';
-import { Box, TextField, Button, Typography, Stack, Paper} from '@mui/material';
+import { Box, Typography, TextField, Button, Stack, Paper } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-
-const validationSchema = Yup.object({
-  name: Yup.string().required('Full Name is required'),
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  password: Yup.string().min(6, 'Minimum 6 characters').required('Password is required'),
-});
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
-  const {
-    values, errors, touched, handleChange, handleBlur, handleSubmit
-  } = useFormik({
+  const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    name: Yup.string().required('Name is required'),
+    email: Yup.string().email('Invalid email').required('Email is required'),
+    password: Yup.string().min(6, 'Minimum 6 characters').required('Password is required'),
+  });
+
+  const formik = useFormik({
     initialValues: { name: '', email: '', password: '' },
     validationSchema,
     onSubmit: (values) => {
-      console.log('Form submitted:', values);
+      localStorage.setItem('user', JSON.stringify(values));  
       alert('Registration successful!');
+      navigate('/login');  
     },
   });
-
-  const fields = [
-    { label: 'Full Name', name: 'name', type: 'text' },
-    { label: 'Email', name: 'email', type: 'email' },
-    { label: 'Password', name: 'password', type: 'password' },
-  ];
 
   return (
     <Box sx={{ height: '90vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <Paper elevation={3} sx={{ p: 4, maxWidth: 400, width: '100%' }}>
         <Typography variant="h5" align="center" gutterBottom>
-          Create an Account
+          Register
         </Typography>
-
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={formik.handleSubmit}>
           <Stack spacing={2}>
-            {fields.map(({ label, name, type }) => (
+            {['name', 'email', 'password'].map((field) => (
               <TextField
-                key={name}
-                label={label}
-                name={name}
-                type={type}
+                key={field}
+                name={field}
+                type={field === 'password' ? 'password' : 'text'}
+                label={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={formik.values[field]}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={formik.touched[field] && Boolean(formik.errors[field])}
+                helperText={formik.touched[field] && formik.errors[field]}
                 fullWidth
-                value={values[name]}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched[name] && Boolean(errors[name])}
-                helperText={touched[name] && errors[name]}
               />
             ))}
-
             <Button type="submit" variant="contained" fullWidth>
               Register
             </Button>
@@ -60,4 +54,5 @@ const Register = () => {
     </Box>
   );
 };
+
 export default Register;

@@ -1,17 +1,24 @@
 import React from 'react';
-import { Box,Typography,Stack,Card, CardContent, Button,} from '@mui/material';
+import { Box, Typography, Stack, Card, CardContent, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom'; 
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token"); 
+    navigate("/login", { replace: true }); 
+  };
+
   return (
     <Box sx={{ px: 4, py: 5, bgcolor: '#f9f9f9', minHeight: '100vh' }}>
-     
       <Typography variant="h4" gutterBottom>
         Welcome, Mahek 👋
       </Typography>
       <Typography variant="subtitle1" gutterBottom color="text.secondary">
         Here’s a quick overview of your internship activity.
       </Typography>
-     
+
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} my={4}>
         {[
           { title: 'Total Applications', count: 4 },
@@ -30,7 +37,7 @@ const Dashboard = () => {
           </Card>
         ))}
       </Stack>
-      
+
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} mb={4}>
         <Button variant="contained" color="primary">
           Apply for Internship
@@ -38,7 +45,11 @@ const Dashboard = () => {
         <Button variant="outlined" color="primary">
           Edit Profile
         </Button>
-        <Button variant="text" color="secondary">
+        <Button
+          variant="text"
+          color="secondary"
+          onClick={handleLogout} 
+        >
           Logout
         </Button>
       </Stack>
